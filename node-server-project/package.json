@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A simple Node.js server project using Express.",
   "main": "src/server.js",
+  "type": "module",
   "scripts": {
     "start": "nodemon src/server.js"
   },

@@ -39,7 +39,7 @@ function App() {
           onClick={() => handleTabClick('pacotes')}
         >
           Pacotes
-        </button>
+        </button>       
       </header>
 
       {/* Seção principal */}

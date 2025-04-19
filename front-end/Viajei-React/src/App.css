@@ -1,0 +1,139 @@
+/* Estilos gerais */
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+}
+
+.app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Cabeçalho */
+.header {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.tab-button {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #555;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.tab-button:hover {
+  background-color: #f0f0f0;
+}
+
+.tab-button.active {
+  color: #0066cc;
+  font-weight: bold;
+  border-bottom: 2px solid #0066cc;
+}
+
+/* Conteúdo principal */
+.main-content {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+/* Formulário de busca */
+.search-container {
+  margin: 30px 0;
+}
+
+.search-row {
+  display: flex;
+  gap: 15px;
+}
+
+.search-field {
+  flex: 1;
+}
+
+.search-field label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #444;
+}
+
+.search-field input, 
+.date-placeholder, 
+.guests-placeholder {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+}
+
+.date-placeholder, 
+.guests-placeholder {
+  color: #888;
+  background: #f9f9f9;
+}
+
+/* Parceiros */
+.partners {
+  margin: 30px 0;
+  padding: 20px 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.partner-logos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.partner-logos span {
+  background: #f0f7ff;
+  padding: 8px 15px;
+  border-radius: 20px;
+  color: #0066cc;
+  font-size: 14px;
+}
+
+/* Benefícios */
+.benefits {
+  display: flex;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.benefit-item {
+  text-align: center;
+  flex: 1;
+}
+
+.benefit-item span {
+  font-size: 24px;
+  display: block;
+  margin-bottom: 10px;
+}

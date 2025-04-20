@@ -24,6 +24,7 @@ const usuarioSchema = new mongoose.Schema({
   email: String,
   senha: String,
 });
+
 const Usuario = mongoose.model("Usuario", usuarioSchema);
 
 // Usuario.create({

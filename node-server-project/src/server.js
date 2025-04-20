@@ -62,9 +62,8 @@ app.post("/cadastrar-usuario", (req, res) => {
     });
 });
 
-// Rota para servir o React no localhost (deve ser a última)
 app.get("*", (req, res) => {
-  res.sendFile(path.join(publicPath, "index.html"));
+  res.sendFile(path.join(publicPath, "App.jsx"));
 });
 
 app.listen(PORT, () => {

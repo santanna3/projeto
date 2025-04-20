@@ -3,7 +3,7 @@ body {
   font-family: 'Arial', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f5f5f5;
+  background-color: #f3e5f5; /* Fundo claro roxo */
 }
 
 .app {
@@ -17,7 +17,7 @@ body {
   display: flex;
   gap: 15px;
   margin-bottom: 30px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #d1c4e9; /* Roxo claro */
   padding-bottom: 10px;
 }
 
@@ -27,19 +27,19 @@ body {
   border: none;
   cursor: pointer;
   font-size: 16px;
-  color: #555;
+  color: #7e57c2; /* Roxo médio */
   border-radius: 4px;
   transition: all 0.3s;
 }
 
 .tab-button:hover {
-  background-color: #f0f0f0;
+  background-color: #ede7f6; /* Fundo roxo claro */
 }
 
 .tab-button.active {
-  color: #0066cc;
+  color: #512da8; /* Roxo escuro */
   font-weight: bold;
-  border-bottom: 2px solid #0066cc;
+  border-bottom: 2px solid #512da8; /* Roxo escuro */
 }
 
 /* Conteúdo principal */
@@ -51,12 +51,12 @@ body {
 }
 
 h1 {
-  color: #333;
+  color: #512da8; /* Roxo escuro */
   margin-bottom: 10px;
 }
 
 .subtitle {
-  color: #666;
+  color: #7e57c2; /* Roxo médio */
   margin-bottom: 30px;
 }
 
@@ -78,7 +78,7 @@ h1 {
   display: block;
   margin-bottom: 8px;
   font-weight: bold;
-  color: #444;
+  color: #512da8; /* Roxo escuro */
 }
 
 .search-field input, 
@@ -86,23 +86,23 @@ h1 {
 .guests-placeholder {
   width: 100%;
   padding: 12px;
-  border: 1px solid #ddd;
+  border: 1px solid #d1c4e9; /* Roxo claro */
   border-radius: 4px;
   background: white;
 }
 
 .date-placeholder, 
 .guests-placeholder {
-  color: #888;
-  background: #f9f9f9;
+  color: #7e57c2; /* Roxo médio */
+  background: #ede7f6; /* Fundo roxo claro */
 }
 
 /* Parceiros */
 .partners {
   margin: 30px 0;
   padding: 20px 0;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
+  border-top: 1px solid #d1c4e9; /* Roxo claro */
+  border-bottom: 1px solid #d1c4e9; /* Roxo claro */
 }
 
 .partner-logos {
@@ -113,10 +113,10 @@ h1 {
 }
 
 .partner-logos span {
-  background: #f0f7ff;
+  background: #ede7f6; /* Fundo roxo claro */
   padding: 8px 15px;
   border-radius: 20px;
-  color: #0066cc;
+  color: #512da8; /* Roxo escuro */
   font-size: 14px;
 }
 
@@ -136,4 +136,9 @@ h1 {
   font-size: 24px;
   display: block;
   margin-bottom: 10px;
+  color: #7e57c2; /* Roxo médio */
+}
+
+.benefit-item p {
+  color: #512da8; /* Roxo escuro */
 }

@@ -8,13 +8,15 @@ const PORT = 5500;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-mongoose.connect(
-  "mongodb+srv://gbsantanna2:Hsegb36.@cluster0.xgeyryb.mongodb.net/db_viajei"
-);
+mongoose
+  .connect(
+    "mongodb+srv://gbsantanna2:Hsegb36.@cluster0.xgeyryb.mongodb.net/db_viajei"
+  )
+  .then(() => console.log("Conectado ao MongoDB Atlas"))
+  .catch((err) => console.error("Erro ao conectar ao MongoDB:", err));
 
 const app = express();
 
-// Servir os arquivos estáticos do React
 const publicPath = path.join(__dirname, "../front-end/Viajei-React/dist");
 app.use(express.static(publicPath));
 app.use(express.json());
@@ -27,7 +29,6 @@ const usuarioSchema = new mongoose.Schema({
 
 const Usuario = mongoose.model("Usuario", usuarioSchema);
 
-// Rotas específicas
 app.get("/buscar-usuarios", async (req, res) => {
   try {
     const usuarios = await Usuario.find({});

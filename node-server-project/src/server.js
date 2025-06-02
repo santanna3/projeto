@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import path from "path";
 import { fileURLToPath } from "url";
+import cors from "cors";
 
 const PORT = 5500;
 
@@ -16,7 +17,7 @@ mongoose
   .catch((err) => console.error("Erro ao conectar ao MongoDB:", err));
 
 const app = express();
-
+app.use(cors());
 const publicPath = path.join(__dirname, "../front-end/Viajei-React/dist");
 app.use(express.static(publicPath));
 app.use(express.json());
@@ -64,7 +65,7 @@ app.post("/cadastrar-usuario", (req, res) => {
 });
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(publicPath, "App.jsx"));
+  res.sendFile(path.join(publicPath, "index.html"));
 });
 
 app.listen(PORT, () => {

@@ -159,3 +159,37 @@ h1 {
 .register-button:hover {
   background-color: #0056b3;
 }
+
+/* Botão de login */
+.login-button {
+  margin-left: 8px;
+  padding: 8px 20px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.login-button:hover {
+  background-color: #218838;
+}
+
+/* Botão de logout */
+.logout-button {
+  margin-left: 8px;
+  padding: 8px 20px;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.logout-button:hover {
+  background-color: #c82333;
+}

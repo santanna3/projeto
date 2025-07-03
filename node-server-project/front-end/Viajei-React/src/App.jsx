@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Cadastro from './Cadastro'; // Importe o componente de cadastro
+import Login from './Login'; // Importe o componente de login
 import './App.css';
 
 function App() {
@@ -8,9 +9,23 @@ function App() {
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [guests, setGuests] = useState('2 hóspedes, 1 quarto');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
+  };
+
+  const handleLoginSuccess = (email) => {
+    setIsAuthenticated(true);
+    setUserEmail(email);
+    setActiveTab('hoteis'); // Volta para a página principal
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setUserEmail('');
+    setActiveTab('hoteis');
   };
 
   return (
@@ -46,13 +61,29 @@ function App() {
           onClick={() => handleTabClick('cadastro')}
         >
           Cadastro
-        </button>       
+        </button>
+        <button 
+          className="login-button"
+          onClick={() => handleTabClick('login')}
+        >
+          {isAuthenticated ? `Olá, ${userEmail}` : 'Login'}
+        </button>
+        {isAuthenticated && (
+          <button 
+            className="logout-button"
+            onClick={handleLogout}
+          >
+            Sair
+          </button>
+        )}       
       </header>
 
       {/* Seção principal */}
       <main className="main-content">
         {activeTab === 'cadastro' ? (
           <Cadastro />
+        ) : activeTab === 'login' ? (
+          <Login onLoginSuccess={handleLoginSuccess} />
         ) : (
           <>
             <h1>Economize até 50% na sua próxima estadia</h1>

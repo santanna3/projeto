@@ -40,16 +40,35 @@ app.get("/buscar-usuarios", async (req, res) => {
   }
 });
 
-app.post("/deletar-usuario", (req, res) => {
+app.post("/deletar-usuario", async (req, res) => {
   const { id } = req.body;
-  Usuario.findByIdAndDelete(id, (err) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Erro ao deletar usuário");
-    } else {
+  try {
+    const resultado = await Usuario.findByIdAndDelete(id);
+    if (resultado) {
       res.send("Usuário deletado com sucesso!");
+    } else {
+      res.status(404).send("Usuário não encontrado");
     }
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erro ao deletar usuário");
+  }
+});
+
+app.post("/fazer-login", (req, res) =>{
+  const { email, senha } = req.body;
+  Usuario.findOne({ email, senha })
+    .then(usuario => {
+      if (usuario) {
+        res.send("Login bem-sucedido!");
+      } else {
+        res.status(401).send("Credenciais inválidas");
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      res.status(500).send("Erro ao fazer login");
+    });
 });
 
 app.post("/cadastrar-usuario", (req, res) => {
@@ -64,6 +83,9 @@ app.post("/cadastrar-usuario", (req, res) => {
     });
 });
 
+// MANTENHA TODAS AS ROTAS API ACIMA DESTA LINHA
+
+// Rota catch-all SÓ para GET (SPA React)
 app.get("*", (req, res) => {
   res.sendFile(path.join(publicPath, "index.html"));
 });

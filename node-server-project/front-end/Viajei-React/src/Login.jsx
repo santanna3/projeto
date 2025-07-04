@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./Login.css";
 
-function Login({ onLoginSuccess }) {
+function Login({ onLoginSuccess, onGoToCadastro }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
@@ -14,7 +14,22 @@ function Login({ onLoginSuccess }) {
     setMessage("");
 
     try {
-        debugger;
+      // Buscar todos os usuários
+      const res = await fetch("http://localhost:5500/buscar-usuarios");
+      const usuarios = await res.json();
+      const usuarioExistente = usuarios.find((u) => u.email === email);
+      if (!usuarioExistente) {
+        setMessage("Não existe usuário cadastrado com esse email.");
+        setLoading(false);
+        return;
+      }
+    } catch (error) {
+      setMessage("Erro ao buscar usuários.");
+      setLoading(false);
+      return;
+    }
+
+    try {
       const response = await fetch("http://localhost:5500/fazer-login", {
         method: "POST",
         headers: {
@@ -25,20 +40,16 @@ function Login({ onLoginSuccess }) {
 
       if (response.ok) {
         const data = await response.text();
-        console.log("Login bem-sucedido:", data);
         setMessage("Login realizado com sucesso!");
-        
-        // Chama a função de sucesso do login passando o email
         if (onLoginSuccess) {
           onLoginSuccess(email);
         }
-      } else {      
+      } else {
         const errorData = await response.text();
         setMessage(`Erro: ${errorData}`);
       }
     } catch (error) {
-      console.error("Erro ao fazer login:", error);
-      setMessage("Erro de conexão. Verifique se o servidor está rodando.");
+      setMessage("Erro ao fazer login. Verifique se o servidor está rodando.");
     } finally {
       setLoading(false);
     }
@@ -52,11 +63,15 @@ function Login({ onLoginSuccess }) {
 
         <form onSubmit={handleSubmit} className="login-form">
           {message && (
-            <div className={`message ${message.includes("sucesso") ? "success" : "error"}`}>
+            <div
+              className={`message ${
+                message.includes("sucesso") ? "success" : "error"
+              }`}
+            >
               {message}
             </div>
           )}
-          
+
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
@@ -118,7 +133,16 @@ function Login({ onLoginSuccess }) {
 
         <div className="login-footer">
           <p>
-            Não tem uma conta? <a href="#">Cadastre-se</a>
+            Não tem uma conta?{" "}
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                if (onGoToCadastro) onGoToCadastro();
+              }}
+            >
+              Cadastre-se
+            </a>
           </p>
         </div>
       </div>

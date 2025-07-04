@@ -11,6 +11,7 @@ function App() {
   const [guests, setGuests] = useState('2 hóspedes, 1 quarto');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userEmail, setUserEmail] = useState('');
+  const [userName, setUserName] = useState('');
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -19,13 +20,51 @@ function App() {
   const handleLoginSuccess = (email) => {
     setIsAuthenticated(true);
     setUserEmail(email);
+    // Buscar nome do usuário pelo email
+    fetch('http://localhost:5500/buscar-usuarios')
+      .then(res => res.json())
+      .then(users => {
+        const user = users.find(u => u.email === email);
+        setUserName(user ? user.nome : '');
+      });
     setActiveTab('hoteis'); // Volta para a página principal
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
     setUserEmail('');
+    setUserName('');
     setActiveTab('hoteis');
+  };
+
+  const handleDeactivateAccount = async () => {
+    if (!userEmail) return;
+    if (!window.confirm('Tem certeza que deseja desativar sua conta?')) return;
+    try {
+      debugger;
+      // Buscar o usuário pelo email para obter o ID
+      const res = await fetch('http://localhost:5500/buscar-usuarios');
+      const users = await res.json();
+      const user = users.find(u => u.email === userEmail);
+      if (!user) {
+        alert('Usuário não encontrado.');
+        return;
+      }
+      // Deletar o usuário
+      const delRes = await fetch('http://localhost:5500/deletar-usuario', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: user._id })
+      });
+      if (delRes.ok) {
+        alert('Conta desativada com sucesso!');
+        handleLogout();
+      } else {
+        alert('Erro ao desativar a conta.');
+      }
+    } catch (err) {
+      alert('Erro de conexão ao desativar a conta.');
+    }
   };
 
   return (
@@ -66,15 +105,23 @@ function App() {
           className="login-button"
           onClick={() => handleTabClick('login')}
         >
-          {isAuthenticated ? `Olá, ${userEmail}` : 'Login'}
+          {isAuthenticated ? `Olá, ${userName}` : 'Login'}
         </button>
         {isAuthenticated && (
-          <button 
-            className="logout-button"
-            onClick={handleLogout}
-          >
-            Sair
-          </button>
+          <>
+            <button 
+              className="logout-button"
+              onClick={handleLogout}
+            >
+              Sair
+            </button>
+            <button
+              className="deactivate-button"
+              onClick={() => handleDeactivateAccount()}
+            >
+              Desativar conta
+            </button>
+          </>
         )}       
       </header>
 
@@ -83,7 +130,7 @@ function App() {
         {activeTab === 'cadastro' ? (
           <Cadastro />
         ) : activeTab === 'login' ? (
-          <Login onLoginSuccess={handleLoginSuccess} />
+          <Login onLoginSuccess={handleLoginSuccess} onGoToCadastro={() => setActiveTab('cadastro')} />
         ) : (
           <>
             <h1>Economize até 50% na sua próxima estadia</h1>

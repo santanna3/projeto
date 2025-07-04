@@ -6,15 +6,13 @@ function Cadastro() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [mensagem, setMensagem] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
+    setMensagem("");
     try {
-      debugger;
-
-      let rota = window.location.origin;
-
       const response = await fetch("http://localhost:5500/cadastrar-usuario", {
         method: "POST",
         headers: {
@@ -22,7 +20,6 @@ function Cadastro() {
         },
         body: JSON.stringify({ nome, email, senha }),
       });
-
       if (response.ok) {
         setMensagem("Cadastro realizado com sucesso!");
         setNome("");
@@ -33,43 +30,70 @@ function Cadastro() {
       }
     } catch (error) {
       setMensagem("Erro de conexão com o servidor.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="cadastro-container">
-      <h2>Cadastro</h2>
-      <form onSubmit={handleSubmit} className="cadastro-form">
-        <label>
-          Nome:
-          <input
-            type="text"
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          E-mail:
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
-        <label>
-          Senha:
-          <input
-            type="password"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            required
-          />
-        </label>
-        <button type="submit">Cadastrar</button>
-      </form>
-      {mensagem && <p className="mensagem">{mensagem}</p>}
+      <div className="cadastro-card">
+        <h2>Cadastro</h2>
+        <p className="cadastro-subtitle">
+          Crie sua conta para aproveitar todos os recursos
+        </p>
+        <form onSubmit={handleSubmit} className="cadastro-form">
+          {mensagem && (
+            <div
+              className={`mensagem ${
+                mensagem.includes("sucesso") ? "success" : "error"
+              }`}
+            >
+              {mensagem}
+            </div>
+          )}
+          <div className="form-group">
+            <label htmlFor="nome">Nome</label>
+            <input
+              type="text"
+              id="nome"
+              placeholder="Digite seu nome"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="email">E-mail</label>
+            <input
+              type="email"
+              id="email"
+              placeholder="Digite seu e-mail"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="senha">Senha</label>
+            <input
+              type="password"
+              id="senha"
+              placeholder="Digite sua senha"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="cadastro-button"
+            disabled={loading}
+          >
+            {loading ? "Cadastrando..." : "Cadastrar"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

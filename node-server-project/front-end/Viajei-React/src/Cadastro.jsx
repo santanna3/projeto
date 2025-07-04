@@ -13,6 +13,21 @@ function Cadastro() {
     setLoading(true);
     setMensagem("");
     try {
+      // Buscar todos os usuários e verificar se o email já existe
+      const res = await fetch("http://localhost:5500/buscar-usuarios");
+      const usuarios = await res.json();
+      const usuarioExistente = usuarios.find((u) => u.email === email);
+      if (usuarioExistente) {
+        setMensagem("Já existe um usuário com esse email.");
+        setLoading(false);
+        return;
+      }
+    } catch (error) {
+      setMensagem("Erro ao validar email. Tente novamente.");
+      setLoading(false);
+      return;
+    }
+    try {
       const response = await fetch("http://localhost:5500/cadastrar-usuario", {
         method: "POST",
         headers: {

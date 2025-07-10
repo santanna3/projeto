@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
+import nodemailer from "nodemailer";
 
 const PORT = 5500;
 
@@ -71,17 +72,60 @@ app.post("/fazer-login", (req, res) =>{
     });
 });
 
-app.post("/cadastrar-usuario", (req, res) => {
+
+// Armazenamento temporário de cadastros pendentes (em memória)
+const cadastrosPendentes = {};
+import crypto from "crypto";
+
+app.post("/cadastrar-usuario", async (req, res) => {
   const { nome, email, senha } = req.body;
-  Usuario.create({ nome, email, senha })
-    .then(() => {
-      res.send("Usuário cadastrado com sucesso!");
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send("Erro ao cadastrar usuário");
+  try {
+    // Gera um token único
+    const token = crypto.randomBytes(32).toString("hex");
+
+    console.log(`Token gerado: ${token}`);
+    // Salva os dados temporariamente
+    cadastrosPendentes[token] = { nome, email, senha, criadoEm: Date.now() };
+
+    // Envia o e-mail de confirmação
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "gb.santanna2@gmail.com",
+        pass: "glqn gjsa ekhc ojog"
+      }
     });
+    const confirmUrl = `http://localhost:${PORT}/confirmar-cadastro?token=${token}`;
+    const mailOptions = {
+      from: "gb.santanna2@gmail.com",
+      to: email,
+      subject: "Confirmação de Cadastro - Viajei",
+      text: `Olá ${nome},\n\nClique no link para confirmar seu cadastro: ${confirmUrl}`
+    };
+    await transporter.sendMail(mailOptions);
+    res.send("E-mail de confirmação enviado. Verifique sua caixa de entrada.");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erro ao enviar e-mail de confirmação");
+  }
 });
+
+app.get("/confirmar-cadastro", async (req, res) => {
+  const { token } = req.query;
+  const dados = cadastrosPendentes[token];
+  if (!dados) {
+    return res.status(400).send("Token inválido ou expirado.");
+  }
+  try {
+    await Usuario.create({ nome: dados.nome, email: dados.email, senha: dados.senha });
+    delete cadastrosPendentes[token];
+    res.send("Cadastro confirmado com sucesso! Você já pode fazer login.");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erro ao confirmar cadastro");
+  }
+});
+
 
 // MANTENHA TODAS AS ROTAS API ACIMA DESTA LINHA
 

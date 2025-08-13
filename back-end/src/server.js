@@ -4,11 +4,18 @@ import path from "path";
 import { fileURLToPath } from "url";
 import cors from "cors";
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
 
-const PORT = 5500;
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const email_user = process.env.MAIL_USER;
+const email_pass = process.env.MAIL_PASS;
+
+console.log("EMAIL_USER:", email_user);
+console.log("EMAIL_PASS:", email_pass);
 
 mongoose
   .connect(
@@ -19,7 +26,7 @@ mongoose
 
 const app = express();
 app.use(cors());
-const publicPath = path.join(__dirname, "../front-end/Viajei-React/dist");
+const publicPath = path.join(__dirname, "../../Viajei-React/dist");
 app.use(express.static(publicPath));
 app.use(express.json());
 
@@ -56,28 +63,30 @@ app.post("/deletar-usuario", async (req, res) => {
   }
 });
 
-app.post("/fazer-login", (req, res) =>{
+app.post("/fazer-login", (req, res) => {
   const { email, senha } = req.body;
   Usuario.findOne({ email, senha })
-    .then(usuario => {
+    .then((usuario) => {
       if (usuario) {
         res.send("Login bem-sucedido!");
       } else {
         res.status(401).send("Credenciais inválidas");
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
       res.status(500).send("Erro ao fazer login");
     });
 });
-
 
 // Armazenamento temporário de cadastros pendentes (em memória)
 const cadastrosPendentes = {};
 import crypto from "crypto";
 
 app.post("/cadastrar-usuario", async (req, res) => {
+  console.log("EMAIL_USER:", email_user);
+  console.log("EMAIL_PASS:", email_pass);
+
   const { nome, email, senha } = req.body;
   try {
     // Gera um token único
@@ -91,16 +100,16 @@ app.post("/cadastrar-usuario", async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "gb.santanna2@gmail.com",
-        pass: "glqn gjsa ekhc ojog"
-      }
+        user: email_user,
+        pass: email_pass,
+      },
     });
     const confirmUrl = `http://localhost:${PORT}/confirmar-cadastro?token=${token}`;
     const mailOptions = {
-      from: "gb.santanna2@gmail.com",
+      from: email_user,
       to: email,
       subject: "Confirmação de Cadastro - Viajei",
-      text: `Olá ${nome},\n\nClique no link para confirmar seu cadastro: ${confirmUrl}`
+      text: `Olá ${nome},\n\nClique no link para confirmar seu cadastro: ${confirmUrl}`,
     };
     await transporter.sendMail(mailOptions);
     res.send("E-mail de confirmação enviado. Verifique sua caixa de entrada.");
@@ -117,7 +126,11 @@ app.get("/confirmar-cadastro", async (req, res) => {
     return res.status(400).send("Token inválido ou expirado.");
   }
   try {
-    await Usuario.create({ nome: dados.nome, email: dados.email, senha: dados.senha });
+    await Usuario.create({
+      nome: dados.nome,
+      email: dados.email,
+      senha: dados.senha,
+    });
     delete cadastrosPendentes[token];
     res.send("Cadastro confirmado com sucesso! Você já pode fazer login.");
   } catch (err) {
@@ -126,13 +139,14 @@ app.get("/confirmar-cadastro", async (req, res) => {
   }
 });
 
-
-// MANTENHA TODAS AS ROTAS API ACIMA DESTA LINHA
-
 // Rota catch-all SÓ para GET (SPA React)
 app.get("*", (req, res) => {
   res.sendFile(path.join(publicPath, "index.html"));
 });
+
+const PORT = process.env.PORT 
+
+console.log(PORT);
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando em: http://localhost:${PORT}`);

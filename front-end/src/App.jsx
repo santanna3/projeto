@@ -41,7 +41,6 @@ function App() {
     if (!userEmail) return;
     if (!window.confirm('Tem certeza que deseja desativar sua conta?')) return;
     try {
-      debugger;
       // Buscar o usuário pelo email para obter o ID
       const res = await fetch('http://localhost:5500/buscar-usuarios');
       const users = await res.json();

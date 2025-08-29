@@ -28,7 +28,6 @@ function Cadastro() {
       return;
     }
     try {
-      debugger;
       const response = await fetch("http://localhost:5500/cadastrar-usuario", {
         method: "POST",
         headers: {

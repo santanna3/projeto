@@ -23,8 +23,30 @@ const usuarioSchema = new mongoose.Schema({
 
 const Usuario = mongoose.model("Usuario", usuarioSchema);
 
+const dadosBancariosSchema = new mongoose.Schema({
+  banco: String,
+  agencia: String,
+  conta: String,
+  tipoConta: String,
+});
+
+const DadosBancarios = new mongoose.model(
+  "DadosBancarios",
+  dadosBancariosSchema
+);
+
 // Armazenamento temporário de cadastros pendentes (em memória)
 const cadastrosPendentes = {};
+
+router.post("/salvar-dados-bancarios", async (req, res) => {
+  const { banco, agencia, conta, tipoConta } = req.body;
+
+  try {
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Erro ao salvar dados bancários");
+  }
+});
 
 router.get("/buscar-usuarios", async (req, res) => {
   try {
